@@ -1,3 +1,2 @@
-This is both a template project for my J2EE applications and an idea bucket for how to create, configure and code
-web applications. It represents some of the ideas that I have either encountered or am experimenting with at any
-given moment.
+This is a port of the [example-webapp](https://github.com/tomcz/example-webapp) application
+to show how to configure spring-framework without using spring's XML configuration.
