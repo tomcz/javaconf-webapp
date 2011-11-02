@@ -68,6 +68,9 @@ task :setup_paths => [:fetch_ivy_libs, :fetch_spring_libs] do
     fileset :dir => "lib/test/jar"
     path :refid => "compile.classpath"
   end
+  ant.path :id => "cobertura.classpath" do
+    fileset :dir => "lib/cobertura/jar"
+  end
 end
 
 desc "Compile and create JARs"
@@ -130,6 +133,42 @@ task :run_jetty => [:clean, :make_jars] do
   ant.java :classname => "example.jetty.WebServer", :fork => "yes", :failonerror => "yes" do
     classpath :refid => "test.classpath"
   end
+end
+
+desc "Create cobertura code coverage report"
+task :cobertura => :make_jars do
+  ant.taskdef :name => "cobertura_instrument",
+              :classname => "net.sourceforge.cobertura.ant.InstrumentTask",
+              :classpathref => "cobertura.classpath"
+  ant.taskdef :name => "cobertura_report",
+              :classname => "net.sourceforge.cobertura.ant.ReportTask",
+              :classpathref => "cobertura.classpath"
+
+  cobertura_datafile = "build/cobertura/cobertura.ser"
+  cobertura_classes = "build/cobertura/classes"
+  cobertura_report = "build/cobertura/report"
+
+  ant.mkdir :dir => cobertura_classes
+  ant.cobertura_instrument :todir => cobertura_classes, :datafile => cobertura_datafile do
+    fileset :dir => COMPILE_DIR, :excludes => "*-tests.jar"
+  end
+
+  ant.junit :fork => "yes", :forkmode => "perBatch", :printsummary => "yes", :haltonfailure => "no" do
+    sysproperty :key => "net.sourceforge.cobertura.datafile", :value => cobertura_datafile
+    classpath do
+      fileset :dir => cobertura_classes
+      fileset :dir => COMPILE_DIR
+      path :refid => "test.classpath"
+      path :refid => "cobertura.classpath"
+    end
+    ["unit-tests", "integration-tests", "system-tests"].each do |test_type|
+      batchtest { fileset :dir => "src/#{test_type}", :includes => "**/*Tests.java" }
+    end
+  end
+
+  ant.mkdir :dir => cobertura_report
+  ant.cobertura_report :format => "html", :datafile => cobertura_datafile,
+                       :destdir => cobertura_report, :srcdir => "src/main"
 end
 
 desc "Create source bundle"
