@@ -5,13 +5,13 @@ if [ ! -d $BOOTSTRAP_DIR ]; then
   mkdir $BOOTSTRAP_DIR
 fi
 
-SPRING_ZIP=$BOOTSTRAP_DIR/spring-framework-3.1.0.RC1.zip
+SPRING_ZIP=$BOOTSTRAP_DIR/spring-framework-3.1.0.RC2.zip
 if [ ! -e $SPRING_ZIP ]; then
   echo "Downloading to $SPRING_ZIP"
-  curl http://s3.amazonaws.com/dist.springframework.org/milestone/SPR/spring-framework-3.1.0.RC1.zip -o $SPRING_ZIP
+  curl http://s3.amazonaws.com/dist.springframework.org/milestone/SPR/spring-framework-3.1.0.RC2.zip -o $SPRING_ZIP
 fi
 
-SPRING_HOME=$BOOTSTRAP_DIR/spring-framework-3.1.0.RC1
+SPRING_HOME=$BOOTSTRAP_DIR/spring-framework-3.1.0.RC2
 if [ ! -d $SPRING_HOME ]; then
   unzip -q -d $BOOTSTRAP_DIR $SPRING_ZIP
 fi

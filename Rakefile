@@ -8,6 +8,7 @@ CLOBBER.include("lib")
 DIST_DIR ="build/dist"
 COMPILE_DIR = "build/compile"
 TEST_REPORT_DIR = "build/report"
+COBERTURA_DIR = "build/cobertura"
 
 desc "Create distributable WAR bundle"
 task :default => [:clean, :run_tests, :make_war]
@@ -137,16 +138,17 @@ end
 
 desc "Create cobertura code coverage report"
 task :cobertura => :make_jars do
+  cobertura_datafile = "#{COBERTURA_DIR}/cobertura.ser"
+  cobertura_classes = "#{COBERTURA_DIR}/classes"
+  cobertura_report = "#{COBERTURA_DIR}/report"
+
   ant.taskdef :name => "cobertura_instrument",
               :classname => "net.sourceforge.cobertura.ant.InstrumentTask",
               :classpathref => "cobertura.classpath"
+
   ant.taskdef :name => "cobertura_report",
               :classname => "net.sourceforge.cobertura.ant.ReportTask",
               :classpathref => "cobertura.classpath"
-
-  cobertura_datafile = "build/cobertura/cobertura.ser"
-  cobertura_classes = "build/cobertura/classes"
-  cobertura_report = "build/cobertura/report"
 
   ant.mkdir :dir => cobertura_classes
   ant.cobertura_instrument :todir => cobertura_classes, :datafile => cobertura_datafile do
