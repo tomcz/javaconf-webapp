@@ -6,13 +6,14 @@ import org.apache.commons.lang.builder.ToStringStyle;
 
 public class Strings {
 
-    private static StandardToStringStyle style;
+    private static ToStringStyle style;
 
     public static ToStringStyle style() {
         if (style == null) {
-            style = new StandardToStringStyle();
-            style.setUseIdentityHashCode(false);
-            style.setUseShortClassName(true);
+            StandardToStringStyle standard = new StandardToStringStyle();
+            standard.setUseIdentityHashCode(false);
+            standard.setUseShortClassName(true);
+            style = standard;
         }
         return style;
     }
