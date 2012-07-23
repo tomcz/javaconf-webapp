@@ -32,8 +32,8 @@ public class ServicesConfiguration {
     @Value("/WEB-INF/create_changelog.sql") Resource createSql;
 
     @Bean
-    public HibernateOperations hibernateOperations() throws Exception {
-        return new HibernateTemplate(sessionFactory().getObject());
+    public HibernateOperations hibernateOperations(SessionFactory sessionFactory) throws Exception {
+        return new HibernateTemplate(sessionFactory);
     }
 
     @Bean
